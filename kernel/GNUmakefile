@@ -5,13 +5,13 @@ override MAKEFLAGS += -rR
 .PHONY: all
 all:
 	cargo build --target x86_64-unknown-none
-	cp target/x86_64-unknown-none/debug/runix kernel.elf
+	cp target/x86_64-unknown-none/debug/runix runix.elf
 
 # Remove object files and the final executable.
 .PHONY: clean
 clean:
 	cargo clean
-	rm -rf kernel.elf
+	rm -rf runix.elf
 
 .PHONY: distclean
 distclean: clean
