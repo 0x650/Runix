@@ -12,6 +12,13 @@
 Runix is an experimental realtime UNIX-like OS written in the Rust programming language.  
 It is under development, and is obviously not yet suitable for any kind of serious use.
 
+## :question: What does "Runix" stand for?
+
+It actually stands for two things!
+
+- **R**ealtime **Unix**
+- **Ru**st **Unix**
+
 ## :package: Building
 
 Building can be done in Windows and macOS, but the makefile expects Linux to be able to generate an ISO.  
