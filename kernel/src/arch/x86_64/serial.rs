@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#[path = "../io/ports.rs"]
-mod ports;
+use crate::arch::x86_64::ports;
 
 const PORT: u16 = 0x3f8;
 

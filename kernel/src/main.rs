@@ -17,13 +17,7 @@
 #![no_std]
 #![no_main]
 
-use core::arch::asm;
-
-#[path = "./arch/x86_64-pc/entry/entry.rs"]
-mod entry;
-
-#[path = "./arch/x86_64-pc/asm/asm.rs"]
-mod asm;
+use runix::arch::x86_64::{entry, asm};
 
 use limine::LimineFramebufferRequest;
 static FRAMEBUFFER_REQUEST: LimineFramebufferRequest = LimineFramebufferRequest::new(0);

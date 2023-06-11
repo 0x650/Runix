@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-#[path = "../serial/serial.rs"]
-mod serial;
-
-#[path = "../asm/asm.rs"]
-mod asm;
+use crate::arch::x86_64::{serial, asm};
 
 pub fn entry() {
     serial::init();
