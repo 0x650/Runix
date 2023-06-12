@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-use crate::arch::x86_64::{serial, asm};
+use crate::arch::common::{asm, serial};
 
 pub fn entry() {
     serial::init();
