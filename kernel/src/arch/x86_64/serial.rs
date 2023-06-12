@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-use crate::arch::x86_64::ports;
+use crate::arch::common::ports;
 
 const PORT: u16 = 0x3f8;
 

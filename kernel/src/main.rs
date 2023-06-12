@@ -17,7 +17,7 @@
 #![no_std]
 #![no_main]
 
-use runix::arch::x86_64::{entry, asm};
+use runix::arch::common::{asm, entry};
 
 use limine::LimineFramebufferRequest;
 static FRAMEBUFFER_REQUEST: LimineFramebufferRequest = LimineFramebufferRequest::new(0);
