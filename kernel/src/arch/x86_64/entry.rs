@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-use crate::arch::common::{asm, serial};
+use crate::arch::common::{asm, gdt, serial};
 
 pub fn entry() {
     serial::init();
+    unsafe {
+        gdt::init();
+    }
     serial::print("Hello x86_64-pc World!\n");
 
     asm::halt_forever();
