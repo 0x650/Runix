@@ -98,6 +98,11 @@ define_struct_with_const_defaults! {
 pub static mut gdt: gdtr = gdtr { ..gdtr::DEFAULT };
 pub static mut gdt_pointer: gdt_ptr = gdt_ptr { ..gdt_ptr::DEFAULT };
 
+extern "C" {
+    fn segment_reload(cs: u8, seg: u8);
+    fn tss_reload(seg: u8);
+}
+
 pub unsafe fn init() {
     // Kernel code
     gdt.entries[1].access = 0b10011010;
@@ -121,25 +126,7 @@ pub unsafe fn init() {
     gdt_pointer.limit = (core::mem::size_of::<gdtr>() - 1) as u16;
     gdt_pointer.ptr = (&gdt as *const _) as u64;
 
-    // "Kimochi warui"
-    // -- Neptune
     asm!("lgdt [{}]", in(reg) &gdt_pointer, options(readonly, nostack, preserves_flags));
-    asm!(
-        "push 8",
-        "lea {tmp}, [1f + rip]",
-        "push {tmp}",
-        "retfq",
-        "1:",
-        tmp = lateout(reg) _,
-    );
-    asm!(
-        "mov eax, 0x10",
-        "mov ds, ax",
-        "mov es, ax",
-        "mov fs, ax",
-        "mov gs, ax",
-        "mov ss, ax",
-        options(nomem, nostack)
-    );
-    asm!("mov ax, 0x2B", "ltr ax", options(nomem, nostack));
+    segment_reload(8, 0x10);
+    tss_reload(0x2B);
 }
