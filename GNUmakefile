@@ -8,10 +8,10 @@ all: $(IMAGE_NAME).iso
 
 .PHONY: run
 run: $(IMAGE_NAME).iso
-	qemu-system-x86_64 -M q35 -m 512M -cdrom $(IMAGE_NAME).iso -serial stdio
+	qemu-system-x86_64 -M q35 -m 512M -cdrom $(IMAGE_NAME).iso -serial stdio -boot d
 
 limine:
-	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1
+	git clone https://github.com/limine-bootloader/limine.git --branch=v5.x-branch-binary --depth=1
 	$(MAKE) -C limine
 
 .PHONY: kernel
@@ -22,13 +22,13 @@ $(IMAGE_NAME).iso: limine kernel
 	rm -rf iso_root
 	mkdir -p iso_root
 	cp kernel/runix.elf \
-		limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-cd-efi.bin iso_root/
-	xorriso -as mkisofs -b limine-cd.bin \
+		limine.cfg limine/limine-bios.sys limine/limine-bios-cd.bin limine/limine-uefi-cd.bin iso_root/
+	xorriso -as mkisofs -b limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
-		--efi-boot limine-cd-efi.bin \
+		--efi-boot limine-uefi-cd.bin \
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
 		iso_root -o $(IMAGE_NAME).iso
-	limine/limine-deploy $(IMAGE_NAME).iso
+	limine/limine bios-install $(IMAGE_NAME).iso
 	rm -rf iso_root
 
 .PHONY: clean
