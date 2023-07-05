@@ -95,8 +95,8 @@ define_struct_with_const_defaults! {
     }
 }
 
-pub static mut gdt: gdtr = gdtr { ..gdtr::DEFAULT };
-pub static mut gdt_pointer: gdt_ptr = gdt_ptr { ..gdt_ptr::DEFAULT };
+pub static mut GDT: gdtr = gdtr { ..gdtr::DEFAULT };
+pub static mut GDT_POINTER: gdt_ptr = gdt_ptr { ..gdt_ptr::DEFAULT };
 
 extern "C" {
     fn segment_reload(cs: u8, seg: u8);
@@ -105,28 +105,28 @@ extern "C" {
 
 pub unsafe fn init() {
     // Kernel code
-    gdt.entries[1].access = 0b10011010;
-    gdt.entries[1].granularity = 0b00100000;
+    GDT.entries[1].access = 0b10011010;
+    GDT.entries[1].granularity = 0b00100000;
 
     // Kernel data
-    gdt.entries[2].access = 0b10010010;
+    GDT.entries[2].access = 0b10010010;
 
     // User data
-    gdt.entries[3].access = 0b11110010;
+    GDT.entries[3].access = 0b11110010;
 
     // User code
-    gdt.entries[4].access = 0b11111010;
-    gdt.entries[4].granularity = 0b00100000;
+    GDT.entries[4].access = 0b11111010;
+    GDT.entries[4].granularity = 0b00100000;
 
     // TSS
-    gdt.tss.length = (core::mem::size_of::<tss>()) as u16;
-    gdt.tss.flags1 = 0b10001001;
+    GDT.tss.length = (core::mem::size_of::<tss>()) as u16;
+    GDT.tss.flags1 = 0b10001001;
 
     // Set the pointer
-    gdt_pointer.limit = (core::mem::size_of::<gdtr>() - 1) as u16;
-    gdt_pointer.ptr = (&gdt as *const _) as u64;
+    GDT_POINTER.limit = (core::mem::size_of::<gdtr>() - 1) as u16;
+    GDT_POINTER.ptr = (&GDT as *const _) as u64;
 
-    asm!("lgdt [{}]", in(reg) &gdt_pointer, options(readonly, nostack, preserves_flags));
+    asm!("lgdt [{}]", in(reg) &GDT_POINTER, options(readonly, nostack, preserves_flags));
     segment_reload(8, 0x10);
     tss_reload(0x2B);
 }
