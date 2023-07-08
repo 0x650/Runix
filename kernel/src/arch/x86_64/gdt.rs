@@ -130,3 +130,13 @@ pub unsafe fn init() {
     segment_reload(8, 0x10);
     tss_reload(0x2B);
 }
+
+pub unsafe fn load_tss(addr: usize) {
+    GDT.tss.base_low = addr as u16;
+    GDT.tss.base_mid = (addr >> 16) as u8;
+    GDT.tss.flags1 = 0b10001001;
+    GDT.tss.base_high = (addr >> 24) as u8;
+    GDT.tss.base_upper32 = (addr >> 32) as u32;
+
+    tss_reload(0x2B);
+}
